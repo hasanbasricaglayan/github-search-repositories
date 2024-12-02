@@ -1,6 +1,6 @@
-# GithubSearchRepositories
+# GitHubSearchRepositories
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.2.12.
+This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.2.12.<br />
 This Angular application allows to search for repositories by using the GitHub REST API.
 
 ## Development server
