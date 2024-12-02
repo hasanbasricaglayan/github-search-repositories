@@ -1,0 +1,64 @@
+<form class="row justify-content-center align-items-center m-3 gap-3" #searchForm="ngForm" (ngSubmit)="searchRepositories(searchForm)">
+	<div class="form-group row gap-1">
+		<div class="col-sm">
+			<input type="text" class="form-control" id="topic" required placeholder="Topic" ngModel name="topic" #topic="ngModel">
+			<span class="error" *ngIf="topic.invalid && topic.touched">Required field</span>
+		</div>
+		<div class="col-sm">
+			<input type="text" class="form-control" id="language" required placeholder="Language" ngModel name="language" #language="ngModel">
+			<span class="error" *ngIf="language.invalid && language.touched">Required field</span>
+		</div>
+		<div class="col-sm">
+			<input type="number" min="0" step="1" pattern="\d+" class="form-control" id="stars" required placeholder="Stars" ngModel name="stars" #stars="ngModel">
+			<span class="error" *ngIf="stars.invalid && stars.touched">Required field</span>
+		</div>
+	</div>
+	<div class="form-group row gap-1">
+		<div class="col-sm">
+			<select class="form-select" id="sort" ngModel name="sort">
+				<option value="">Sort by</option>
+				<option *ngFor="let sortOption of sortOptions" [value]="sortOption.value">{{sortOption.text}}</option>
+			</select>
+		</div>
+		<div class="col-sm">
+			<select class="form-select" id="order" ngModel name="order">
+				<option value="">Order by</option>
+				<option *ngFor="let orderOption of orderOptions" [value]="orderOption.value">{{orderOption.text}}</option>
+			</select>
+		</div>
+		<div class="col-sm">
+			<select class="form-select" id="perPage" ngModel name="perPage">
+				<option value="">Number of results</option>
+				<option *ngFor="let perPageOption of perPageOptions" [value]="perPageOption.value">{{perPageOption.text}}</option>
+			</select>
+		</div>
+	</div>
+	<div class="col-auto">
+		<button type="submit" class="btn btn-success" [disabled]="searchForm.invalid">Search</button>
+	</div>
+</form>
+<div *ngIf="(repositories$ | async) as repositories" class="accordion">
+	<div *ngFor="let repository of repositories" class="accordion-item">
+		<h2 class="accordion-header">
+			<button class="accordion-button bg-white" type="button" data-bs-toggle="collapse" aria-expanded="false" (click)="showRepositoryDetails(repository)">
+				{{repository.name}}
+			</button>
+		</h2>
+		<div [ngClass]="{'accordion-collapse collapse': true, 'show': currentRepository?.id === repository.id}">
+			<div class="accordion-body">
+				<div class="d-flex justify-content-start align-items-center flex-wrap gap-5 row-gap-1">
+					<p>&#11088; <strong>{{repository.stargazers_count}}</strong> stars</p>
+					<p><strong>{{repository.forks_count}}</strong> forks</p>
+					<p><strong>{{repository.open_issues_count}}</strong> open issues</p>
+					<p>Updated on <strong>{{repository.updated_at | date :'dd/MM/yyyy'}}</strong></p>
+				</div>
+				<p class="mb-0">{{repository.description}}</p>
+				<p><a [href]="repository.html_url" target="_blank">View repository on GitHub</a></p>
+				<div *ngIf="(user$ | async) as user">
+					<h6>By <strong>{{user.login}}</strong> ({{user.public_repos}} public repositories)</h6>
+					<img [src]="user.avatar_url" alt="Avatar" width="100">
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
